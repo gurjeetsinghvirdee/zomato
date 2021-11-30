@@ -1,20 +1,25 @@
-import {Avatar, Button, TextField, Grid, Box, Typography, Container,} from "@mui/material";
-import BrunchDiningOutlinedIcon from '@mui/icons-material/BrunchDiningOutlined';
-import { useStateValue } from "../../Config/StateProvider";
-import { ACTION_TYPE } from "../../Config/reducer";
+import {
+  Avatar,
+  Button,
+  TextField,
+  Grid,
+  Box,
+  Typography,
+  Container,
+} from "@mui/material";
 import { useNavigate, Link } from "react-router-dom";
 import { toast } from "react-toastify";
+import BrunchDiningOutlinedIcon from "@mui/icons-material/BrunchDiningOutlined";
 import axios from "axios";
 import HandleError from "../../Utils/handleError";
 
-const Login = () => {
-  const [_, dispatch] = useStateValue();
+const RegisterRestaurant = () => {
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const URL = `${process.env.REACT_APP_API_URL}/user/login`;
+    const URL = `${process.env.REACT_APP_API_URL}/restaurant/signup`;
     let data = new FormData(e.currentTarget);
     data = Object.fromEntries(data);
 
@@ -22,17 +27,10 @@ const Login = () => {
       .post(URL, data)
       .catch((error) => HandleError(error));
 
-    if (!newUser?.data) return toast.error("Unable to login");
-
-    const user = newUser.data?.data;
-
-    localStorage.setItem("token", user.token);
-
-    dispatch({ type: ACTION_TYPE.SET_USER, user });
-
-    toast.success("Successfully logged in");
-
-    navigate("/", { replace: true });
+    if (newUser?.data) {
+      toast.success("Successfully registered, please login");
+      navigate("/login", { replace: true });
+    }
   };
 
   return (
@@ -49,14 +47,40 @@ const Login = () => {
         }}
       >
         <Avatar sx={{ m: 1, bgcolor: "black" }}>
-          <BrunchDiningOutlinedIcon/>
+          <BrunchDiningOutlinedIcon />
         </Avatar>
-
         <Typography component='h1' variant='h5'>
-          Login
+          Register Restaurant
         </Typography>
-
         <Box component='form' onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+          <TextField
+            margin='normal'
+            required
+            fullWidth
+            id='restaurantName'
+            label='Restaurant Name'
+            name='restaurantName'
+            autoComplete='restaurantName'
+            autoFocus
+          />
+          <TextField
+            margin='normal'
+            required
+            fullWidth
+            id='location'
+            label='Location'
+            name='location'
+            autoComplete='location'
+          />
+          <TextField
+            margin='normal'
+            required
+            fullWidth
+            id='ownerName'
+            label='Your Name'
+            name='ownerName'
+            autoComplete='ownerName'
+          />
           <TextField
             margin='normal'
             required
@@ -65,7 +89,6 @@ const Login = () => {
             label='Phone'
             name='phone'
             autoComplete='phone'
-            autoFocus
           />
           <TextField
             margin='normal'
@@ -83,11 +106,11 @@ const Login = () => {
             variant='contained'
             sx={{ mt: 3, mb: 2 }}
           >
-            Login
+            Sign Up
           </Button>
           <Grid container justifyContent='right'>
-            <Link className='unlink' to='../signup'>
-              Don't have an account? Sign Up
+            <Link className='unlink' to='../login'>
+              Already have an account? Login
             </Link>
           </Grid>
         </Box>
@@ -115,4 +138,4 @@ const Copyright = (props) => {
   );
 };
 
-export default Login;
+export default RegisterRestaurant;
