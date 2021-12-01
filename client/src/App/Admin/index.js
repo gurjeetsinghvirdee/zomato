@@ -1,5 +1,17 @@
-const Admin = () => {
-  return <h1>Welcom Admin</h1>;
-};
+import React from 'react';
+import {Button} from '@mui/material';
 
-export default Admin;
+const index = () => {
+  return (
+    <div>
+      <h1>Admin Panel</h1>
+      <nav>
+        <Button>
+          <li>Logout</li>
+        </Button>
+      </nav>
+    </div>
+  )
+}
+
+export default index
